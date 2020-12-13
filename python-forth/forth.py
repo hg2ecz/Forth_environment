@@ -23,7 +23,10 @@ def main() :
     while 1 :
         pcode = forth_compile()          # compile/run from user
         if pcode == None : print(); return
-        if DEBUG: print(pcode);
+        if DEBUG:
+            print("====== Execute =======")
+            print(pcode);
+            print("======== End =========")
         forth_execute(pcode)
 
 #============================== Lexical Parsing
@@ -125,7 +128,9 @@ def forth_compile () :
         cAct = cDict.get(word)  # Is there a compile time action ?
         rAct = rDict.get(word)  # Is there a runtime action ?
 
-        if cAct : cAct(pcode)   # run at compile time
+        if cAct :
+            if DEBUG: print(pcode);
+            cAct(pcode)   # run at compile time
         elif rAct :
             if type(rAct) == type([]) :
                 pcode.append(rRun)     # Compiled word.
@@ -140,7 +145,9 @@ def forth_compile () :
                 except : 
                     pcode[-1] = rRun     # Change rPush to rRun
                     pcode.append(word)   # Assume word will be defined
-        if not cStack : return pcode
+        if not cStack :
+            if DEBUG: print(pcode);
+            return pcode
         prompt = "...    "
 
 def fatal (mesg) : raise mesg
